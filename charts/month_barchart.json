@@ -1,0 +1,54 @@
+{
+    "$schema": "https://vega.github.io/schema/vega-lite/v5.json",
+    "background": null,
+    "description": "Monthly Complaint Distribution (Filtered by Year)",
+    "width": 500,
+    "height": 300,
+    "data": {
+      "url": "data/complaints_by_month_year.json"
+    },
+    "params": [
+      {
+        "name": "SelectedYear",
+        "bind": {
+          "input": "select",
+          "options": [2018, 2019, 2020, 2021, 2022, 2023, 2024, 2025],
+          "name": "Select Year: "
+        },
+        "value": 2024
+      }
+    ],
+    "transform": [
+      {
+        "filter": "datum.YEAR == SelectedYear"
+      }
+    ],
+    "mark": "bar",
+    "encoding": {
+      "x": {
+        "field": "MONTH",
+        "type": "ordinal",
+        "sort": [
+          "January", "February", "March", "April", "May", "June",
+          "July", "August", "September", "October", "November", "December"
+        ],
+        "axis": {
+          "title": "Month"
+        }
+      },
+      "y": {
+        "field": "count",
+        "type": "quantitative",
+        "axis": {
+          "title": "Number of Complaints"
+        }
+      },
+      "tooltip": [
+        { "field": "YEAR", "type": "ordinal" },
+        { "field": "MONTH", "type": "ordinal" },
+        { "field": "count", "type": "quantitative" }
+      ]
+    },
+    "view": { "stroke": null }
+  }
+  

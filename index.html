@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Flooding Complaints</title>
+
+  <!-- Vega & Vega-Lite Libraries -->
+  <script src="https://cdn.jsdelivr.net/npm/vega@5"></script>
+  <script src="https://cdn.jsdelivr.net/npm/vega-lite@5"></script>
+  <script src="https://cdn.jsdelivr.net/npm/vega-embed@6"></script>
+  
+  <!-- Your CSS -->
+  <link rel="stylesheet" href="./style.css" />
+</head>
+
+<body>
+  <h1>Flooding Complaints To 311</h1>
+  <div class="title-bar"></div>
+  
+  <div class="grid">
+    <div class="visualization" id="Barchart"></div>
+    <div class="visualization" id="stackbar"></div>
+    <div class="visualization" id="Choropleth"></div>
+    <div class="visualization" id="BarLineChart"></div>
+  </div>
+
+  <!-- Your JavaScript -->
+  <script src="./main.js"></script>
+</body>
+
+</html>

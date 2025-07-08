@@ -1,0 +1,130 @@
+{
+    "$schema": "https://vega.github.io/schema/vega-lite/v5.json",
+    "background": null,
+    "vconcat": [
+      {
+        "description": "Flood Complaints Over Time (Top ZIP Codes)",
+        "width": 500,
+        "height": 250,
+        "data": {
+          "url": "data/stack.json"
+        },
+        "transform": [
+          {
+            "calculate": "toDate(datum.YearMonth + '-01')",
+            "as": "ParsedDate"
+          }
+        ],
+        "selection": {
+          "brush": {
+            "type": "interval",
+            "encodings": ["x"]
+          },
+          "hover": {
+            "type": "single",
+            "nearest": true,
+            "on": "mouseover",
+            "empty": "none",
+            "clear": "mouseout"
+          }
+        },
+        "mark": {
+          "type": "area",
+          "interpolate": "monotone"
+        },
+        "encoding": {
+          "x": {
+            "field": "ParsedDate",
+            "type": "temporal",
+            "title": "Month"
+          },
+          "y": {
+            "field": "count",
+            "type": "quantitative",
+            "stack": "zero",
+            "title": "Number of Complaints"
+          },
+          "color": {
+            "field": "ZIP_CODE",
+            "type": "nominal",
+            "title": "ZIP Code"
+          },
+          "opacity": {
+            "condition": { "selection": "hover", "value": 1 },
+            "value": 0.6
+          },
+          "tooltip": [
+            { "field": "ParsedDate", "type": "temporal", "format": "%B %Y" },
+            { "field": "ZIP_CODE", "type": "nominal" },
+            { "field": "count", "type": "quantitative" }
+          ]
+        }
+      },
+      {
+        "description": "Monthly Complaint Totals by ZIP Code (Filtered by Brush)",
+        "width": 500,
+        "height": 250,
+        "data": {
+          "url": "data/stack.json"
+        },
+        "transform": [
+          {
+            "calculate": "toDate(datum.YearMonth + '-01')",
+            "as": "ParsedDate"
+          },
+          {
+            "filter": {
+              "selection": "brush"
+            }
+          },
+          {
+            "aggregate": [
+              { "op": "sum", "field": "count", "as": "Total" }
+            ],
+            "groupby": ["ParsedDate", "ZIP_CODE"]
+          }
+        ],
+        "mark": "bar",
+        "encoding": {
+          "x": {
+            "field": "ParsedDate",
+            "type": "temporal",
+            "timeUnit": "yearmonth",
+            "title": "Month",
+            "axis": {
+              "format": "%m/%Y",
+              "labelAngle": -40
+            }
+          },
+          "y": {
+            "field": "Total",
+            "type": "quantitative",
+            "title": "Total Complaints"
+          },
+          "color": {
+            "field": "ZIP_CODE",
+            "type": "nominal",
+            "title": "ZIP Code"
+          },
+          "tooltip": [
+            {
+              "field": "ParsedDate",
+              "type": "temporal",
+              "format": "%B %Y",
+              "title": "Month"
+            },
+            {
+              "field": "ZIP_CODE",
+              "type": "nominal",
+              "title": "ZIP Code"
+            },
+            {
+              "field": "Total",
+              "type": "quantitative",
+              "title": "Complaints"
+            }
+          ]
+        }
+      }
+    ]
+  }

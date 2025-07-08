@@ -1,0 +1,195 @@
+{
+  "$schema": "https://vega.github.io/schema/vega-lite/v5.json",
+  "description": "Pareto Chart for Flooding Complaints Dashboard",
+  "autosize": {
+    "type": "fit",
+    "contains": "padding"
+  },
+  "data": {
+    "url": "data/flooding_complaints_preprocessed.json"
+  },
+  "params": [
+    {
+      "name": "group_field",
+      "value": "MONTH",
+      "bind": {
+        "input": "select",
+        "name": "▾ View by:",
+        "options": ["MONTH", "COMPLAINT_TYPE", "YEAR", "INCIDENT_ZIP"],
+        "labels": ["Month", "Complaint Type", "Year", "ZIP Code"]
+      }
+    }
+  ],
+  "transform": [
+    {
+      "fold": ["MONTH", "COMPLAINT_TYPE", "YEAR", "INCIDENT_ZIP"],
+      "as": ["category", "value"]
+    },
+    {
+      "filter": "datum.category == group_field"
+    },
+    {
+      "aggregate": [{"op": "count", "as": "count"}],
+      "groupby": ["value"]
+    },
+    {
+      "window": [
+        {"op": "sum", "field": "count", "as": "totalComplaints"}
+      ],
+      "frame": [null, null]
+    },
+    {
+      "sort": [{"field": "count", "order": "descending"}],
+      "window": [
+        {"op": "sum", "field": "count", "as": "cumulativeCount"}
+      ],
+      "frame": [null, 0]
+    },
+    {
+      "calculate": "datum.cumulativeCount / datum.totalComplaints * 100",
+      "as": "cumulativePercentage"
+    },
+    {
+      "calculate": "datum.count / datum.totalComplaints * 100",
+      "as": "individualPercentage"
+    }
+    
+  ],
+  "vconcat": [
+    {
+      "title": "Pareto Chart of Flooding Complaints",
+      "width": 400,
+      "height": 250,
+      "layer": [
+        {
+          "mark": {
+            "type": "bar",
+            "tooltip": true,
+            "cornerRadiusEnd": 4
+          },
+          "encoding": {
+            "x": {
+              "field": "value",
+              "type": "nominal",
+              "sort": "-y",
+              "title": "Group"
+            },
+            "y": {
+              "field": "count",
+              "type": "quantitative",
+              "title": "Number of Complaints",
+              "axis": {"grid": false}
+            },
+            "color": {
+              "field": "value",
+              "type": "nominal",
+              "legend": null,
+              "scale": {"scheme": "blues"}
+            },
+            "tooltip": [
+              {"field": "value", "type": "nominal", "title": "Group"},
+              {"field": "count", "type": "quantitative", "title": "Complaints"},
+              {"field": "cumulativePercentage", "type": "quantitative", "title": "Cumulative %", "format": ".1f"},
+              {"field": "individualPercentage", "type": "quantitative", "title": "Individual %", "format": ".1f"}
+            ]
+          }
+        },
+        {
+          "mark": {
+            "type": "line",
+            "color": "orange",
+            "strokeWidth": 2,
+            "point": {
+              "filled": true,
+              "fill": "orange",
+              "size": 50
+            }
+          },
+          "encoding": {
+            "x": {
+              "field": "value",
+              "type": "nominal",
+              "sort": "-y"
+            },
+            "y": {
+              "field": "cumulativePercentage",
+              "type": "quantitative",
+              "title": "Cumulative Percentage",
+              "axis": {"grid": false, "titleColor": "orange", "tickColor": "orange", "labelColor": "orange"}
+            },
+            "tooltip": [
+              {"field": "value", "type": "nominal", "title": "Group"},
+              {"field": "cumulativePercentage", "type": "quantitative", "title": "Cumulative %", "format": ".1f"},
+              {"field": "individualPercentage", "type": "quantitative", "title": "Individual %", "format": ".1f"}
+            ]
+          }
+        }
+      ],
+      "resolve": {
+        "scale": {
+          "y": "independent"
+        }
+      }
+    },
+    {
+      "title": "Complaint Volume by Group (Lollipop Chart)",
+      "width": 400,
+      "height": 200,
+      "transform": [
+        {
+          "sort": [{"field": "count", "order": "descending"}]
+        }
+      ],
+      "layer": [
+        {
+          "mark": {
+            "type": "rule",
+            "strokeWidth": 1,
+            "color": "gray"
+          },
+          "encoding": {
+            "y": {
+              "field": "value",
+              "type": "nominal",
+              "sort": "-x"
+            },
+            "x": {
+              "field": "count",
+              "type": "quantitative"
+            }
+          }
+        },
+        {
+          "mark": {
+            "type": "circle",
+            "size": 100
+          },
+          "encoding": {
+            "y": {
+              "field": "value",
+              "type": "nominal",
+              "sort": "-x",
+              "title": "Group"
+            },
+            "x": {
+              "field": "count",
+              "type": "quantitative",
+              "title": "Complaint Volume"
+            },
+            "color": {
+              "field": "count",
+              "type": "quantitative",
+              "legend": null,
+              "scale": {"scheme": "blues"}
+            },
+            "tooltip": [
+              {"field": "value", "type": "nominal", "title": "Group"},
+              {"field": "count", "type": "quantitative", "title": "Total Complaints"},
+              {"field": "cumulativePercentage", "type": "quantitative", "title": "Cumulative %", "format": ".1f"}
+            ]
+          }
+        }
+      ]
+    }
+  ]
+}

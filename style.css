@@ -1,0 +1,99 @@
+html, body {
+    height: 100%;
+    margin: 0;
+    padding: 0;
+    overflow-x: hidden;
+    background-color: #313131; 
+    color: #333; 
+    font-family: Arial, sans-serif;
+    text-align: center;
+}
+
+/* Keep Vega charts transparent if needed */
+/* .vega-embed, .vega-embed svg, .vega-embed canvas {
+    background: none !important;
+} */
+
+.grid {
+    display: grid;
+    height: calc(100% - 80px);
+    grid-template-columns: repeat(auto-fit, minmax(450px, 1fr));
+    grid-template-rows: 1fr 1fr;
+    grid-template-areas:
+      "Barchart stackbar"
+      "Choropleth BarLineChart";
+    gap: 20px;
+    width: 100%;
+    max-width: 1200px;
+    margin: 0 auto;
+
+}
+
+.visualization {
+    background-color: white;
+    border-radius: 10px;
+    border: 1px solid #ddd;
+    width: 100%;
+    height: 100%;
+    min-width: 550px;
+    min-height: 500px;
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.1);
+    padding: 15px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    cursor: pointer;
+    z-index: 1;
+    transition: all .8s ease;
+    overflow: hidden;
+}
+
+.visualization.enlarged {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    width: 90vw;
+    height: 90vh;
+    transform: translate(-50%, -50%) !important;
+    background: white;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+    z-index: 1000;
+    transition: all 1s ease;
+    pointer-events: auto;
+  }
+  
+
+.visualization:not(.enlarged):hover {
+    transform: scale(1.02);
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
+  }
+  
+
+#Barchart { grid-area: Barchart; }
+#stackbar { grid-area: stackbar; }
+#Choropleth { grid-area: Choropleth; margin-top: -15px; }
+#BarLineChart { grid-area: BarLineChart; margin-top: -15px; }
+
+.visualization:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
+}
+
+h1 {
+    color: #ffffff;
+    font-size: 2.8em;
+    font-weight: bold;
+    margin: 20px 0;
+    letter-spacing: 1px;
+    text-shadow: 10px 6px 6px rgb(0, 0, 0);
+}
+  
+.title-bar {
+    width: 600px; 
+    height: 4px;  
+    background-color: #498cda; 
+    margin: 10px auto 20px auto; 
+    border-radius: 2px;
+    margin-top: -5px;
+}

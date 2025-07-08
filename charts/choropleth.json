@@ -1,0 +1,54 @@
+{
+    "$schema": "https://vega.github.io/schema/vega-lite/v5.json",
+    "background": null,
+    "description": "Flooding Complaints Choropleth Map",
+    "data": {
+      "url": "Boundaries - ZIP Codes_20250308.geojson",
+      "format": {
+        "type": "json",
+        "property": "features"
+      }
+    },
+    "transform": [
+      {
+        "lookup": "properties.zip",
+        "from": {
+          "data": {
+            "url": "data/total_complaints_zip.json"
+          },
+          "key": "ZIP_CODE",
+          "fields": ["count"]
+        }
+      },
+      {
+        "calculate": "datum.count == null ? 0 : datum.count",
+        "as": "complaints"
+      }
+    ],
+    "projection": {
+      "type": "mercator"
+    },
+    "mark": {
+      "type": "geoshape",
+      "stroke": "black",
+      "strokeWidth": 0.8
+    },
+    "encoding": {
+      "color": {
+        "field": "complaints",
+        "type": "quantitative",
+        "scale": {
+          "type": "linear",
+          "scheme": "blues"
+        },
+        "title": "Flooding Complaints"
+      },
+      "tooltip": [
+        {"field": "properties.zip", "type": "nominal", "title": "ZIP Code"},
+        {"field": "complaints", "type": "quantitative", "title": "Complaint Count"}
+      ]
+    },
+    "title": "Flooding Complaints by ZIP Code Choropleth",
+    "width": 500,
+    "height": 400
+  }
