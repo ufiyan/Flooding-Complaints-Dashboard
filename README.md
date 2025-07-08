@@ -1,4 +1,4 @@
-# Assignment 4: Interactive Visualization of Flooding Complaints in Chicago (2018–2025)
+Interactive Visualization of Flooding Complaints in Chicago (2018–2025)
 ![website](images/website.gif) 
 
 
